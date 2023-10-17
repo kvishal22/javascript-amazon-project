@@ -1,6 +1,6 @@
 import {cart, addToCart} from '../data/cart.js';
 import { products } from '../data/products.js';
-
+import { moneyFix } from './utils/money.js';
   
     let produdctsHTML = '';
 
@@ -25,7 +25,7 @@ import { products } from '../data/products.js';
           </div>
 
           <div class="product-price">
-            $${(product.priceCents/100).toFixed(2)}
+            $${moneyFix(product.priceCents)}
           </div>
 
           <div class="product-quantity-container">
