@@ -1,6 +1,7 @@
-import { cart } from "../data/cart.js";
+import { cart, removeCartItem } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { moneyFix } from "./utils/money.js";
+
 
   let cartSummaryHTML = '';
 
@@ -41,7 +42,8 @@ import { moneyFix } from "./utils/money.js";
               <span class="update-quantity-link link-primary">
                 Update
               </span>
-              <span class="delete-quantity-link link-primary">
+              <span class="delete-quantity-link link-primary js-delete"
+              data-product-id="${matchingProduct.id}">
                 Delete
               </span>
             </div>
@@ -57,7 +59,7 @@ import { moneyFix } from "./utils/money.js";
                 name="delivery-option-${matchingProduct.id}">
               <div>
                 <div class="delivery-option-date">
-                  Tuesday, June 21
+                  Tuesday, December 21
                 </div>
                 <div class="delivery-option-price">
                   FREE Shipping
@@ -70,7 +72,7 @@ import { moneyFix } from "./utils/money.js";
                 name="delivery-option-${matchingProduct.id}">
               <div>
                 <div class="delivery-option-date">
-                  Wednesday, June 15
+                  Wednesday, December 15
                 </div>
                 <div class="delivery-option-price">
                   $4.99 - Shipping
@@ -83,7 +85,7 @@ import { moneyFix } from "./utils/money.js";
                 name="delivery-option-${matchingProduct.id}">
               <div>
                 <div class="delivery-option-date">
-                  Monday, June 13
+                  Monday, December 13
                 </div>
                 <div class="delivery-option-price">
                   $9.99 - Shipping
@@ -98,3 +100,11 @@ import { moneyFix } from "./utils/money.js";
 
   document.querySelector('.js-order-summary')
         .innerHTML = cartSummaryHTML;
+
+  document.querySelectorAll('.js-delete')
+        .forEach((link)=>{
+            link.addEventListener('click', ()=>{
+            const productId = link.dataset.productId;
+          removeCartItem(productId);
+          })
+        });
