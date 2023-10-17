@@ -1,7 +1,6 @@
-import { cart, removeCartItem } from "../data/cart.js";
+import { cart, removeCartItem, calculateCartQuantity } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { moneyFix } from "./utils/money.js";
-
 
   let cartSummaryHTML = '';
 
@@ -39,9 +38,12 @@ import { moneyFix } from "./utils/money.js";
               <span>
                 Quantity: <span class="quantity-label">${cartItem.quantity}</span>
               </span>
-              <span class="update-quantity-link link-primary">
-                Update
+              <span class="update-quantity-link link-primary js-update is-editing-quantity" 
+              data-product-id="${matchingProduct.id}">
+                Update 
               </span>
+              <input class="quantity-input">
+              <span class="save-quantity-link link-primary">Save</span>
               <span class="delete-quantity-link link-primary js-delete"
               data-product-id="${matchingProduct.id}">
                 Delete
@@ -104,10 +106,30 @@ import { moneyFix } from "./utils/money.js";
   document.querySelectorAll('.js-delete')
         .forEach((link)=>{
             link.addEventListener('click', ()=>{
-            const productId = link.dataset.productId;
+            const {productId} = link.dataset;
           removeCartItem(productId);
     const container =  document.querySelector(`.js-add-to-cart-${productId}`)
     container.remove();
 
+    updateCart();
           });
         });
+
+    function updateCart(){
+     const cartQuantity = calculateCartQuantity();
+    
+      document.querySelector('.js-check-out-items')
+          .innerHTML = `${cartQuantity} items`;
+    }
+    updateCart();
+
+    document.querySelectorAll('.js-update')
+        .forEach((link)=>{
+            link.addEventListener('click', ()=>{
+              const {productId} = link.dataset;
+        
+        const container = document.querySelector(`.js-add-to-cart-${productId}`);
+          container.classList.add('is-editing-quantity');
+            });
+        });
+    

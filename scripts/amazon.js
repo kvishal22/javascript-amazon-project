@@ -1,7 +1,7 @@
-import {cart, addToCart} from '../data/cart.js';
+import {cart, addToCart, calculateCartQuantity} from '../data/cart.js';
 import { products } from '../data/products.js';
 import { moneyFix } from './utils/money.js';
-  
+
     let produdctsHTML = '';
 
     products.forEach((product) =>{
@@ -57,17 +57,16 @@ import { moneyFix } from './utils/money.js';
         </div>
         `;
     });
-    
+   
     function updateCart(){
-      let cartQuantity = 0;
-    
-          cart.forEach((cartItem) => {
-            cartQuantity += cartItem.quantity;
-          });
-    
+
+        const cartQuantity =  calculateCartQuantity();
+           
           document.querySelector('.js-cart-quantity')
-            .innerHTML = cartQuantity;
-    }
+            .innerHTML = cartQuantity; 
+    }   
+
+    updateCart();
 
 
     const addedMessageTimeOuts = {};
