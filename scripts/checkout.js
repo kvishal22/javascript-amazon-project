@@ -19,9 +19,9 @@ import { moneyFix } from "./utils/money.js";
 
       cartSummaryHTML +=
     `
-    <div class="cart-item-container">
+    <div class="cart-item-container js-add-to-cart-${matchingProduct.id}">
         <div class="delivery-date">
-          Delivery date: Tuesday, June 21
+          Delivery date: Tuesday, December 21
         </div>
 
         <div class="cart-item-details-grid">
@@ -106,5 +106,8 @@ import { moneyFix } from "./utils/money.js";
             link.addEventListener('click', ()=>{
             const productId = link.dataset.productId;
           removeCartItem(productId);
-          })
+    const container =  document.querySelector(`.js-add-to-cart-${productId}`)
+    container.remove();
+
+          });
         });
