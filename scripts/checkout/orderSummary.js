@@ -2,7 +2,7 @@ import { cart, removeCartItem, calculateCartQuantity, updateQuantity, updateDeli
 import { products,getProducts } from "../../data/products.js";
 import { moneyFix } from "../utils/money.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { deliveryOptions } from "../../data/deliveryOption.js";
+import { deliveryOptions,getDeliveryOption } from "../../data/deliveryOption.js";
 
 
 export function render(){
@@ -25,13 +25,8 @@ let cartQuantity = 0;
       
       const deliveryOptionId = cartItem.deliveryOptionId;
 
-      let deliveryOption;
+      const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-      deliveryOptions.forEach((option)=>{
-          if(option.id===deliveryOptionId){
-            deliveryOption=option;
-          }
-      });
 
       const today = dayjs();
       const deliveryDate = today.add(
@@ -201,77 +196,7 @@ let cartQuantity = 0;
               });
           });
           
-            
-
-          cart.forEach((cartItem) => {
-    
-            const {productId} = cartItem;
-       
-             let matchingProduct;
-       
-             products.forEach((product) => {
-               if(product.id === productId){
-                 matchingProduct=product;
-               }
-             });
-
-           // var totalPrice =(moneyFix(matchingProduct.priceCents) * (calculateCartQuantity()));
-           const totalPrice=  Number.parseFloat((moneyFix(matchingProduct.priceCents) * (calculateCartQuantity()))).toFixed(2);
-
-          //  const beforeTax = Number.parseFloat(totalPrice + 9.9).toFixed(2);
-
-            // const estimatedTax =Number.parseFloat(beforeTax * 0.10).toFixed(2);
-            // const orderTotal = (Number.parseFloat(estimatedTax) + Number.parseFloat(beforeTax)).toFixed(2);
-            // const cartQuantity = calculateCartQuantity();
-
-            const beforeTax = (totalSubtotal + 9.9).toFixed(2);
-            const estimatedTax = (Number.parseFloat(beforeTax) * 0.10).toFixed(2);
-            const orderTotal = (Number.parseFloat(estimatedTax) + Number.parseFloat(beforeTax)).toFixed(2);
-            
-            let orderSummaryHTML = `
-             
-            <div class="payment-summary-title">
-                    Order Summary
-                  </div>
-        
-                  <div class="payment-summary-row">
-                    <div>Items (${cartQuantity}):
-        
-                    </div>
-                    <div class="payment-summary-money">
-                    $${totalPrice}
-                    </div>
-                  </div>
-        
-                  <div class="payment-summary-row">
-                    <div>Shipping &amp; handling:</div>
-                    <div class="payment-summary-money">$9.99</div>
-                  </div>
-        
-                  <div class="payment-summary-row subtotal-row">
-                    <div>Total before tax:</div>
-                    <div class="payment-summary-money">$${beforeTax}</div>
-                  </div>
-        
-                  <div class="payment-summary-row">
-                    <div>Estimated tax (10%):</div>
-                    <div class="payment-summary-money">$${estimatedTax}</div>
-                  </div>
-        
-                  <div class="payment-summary-row total-row">
-                    <div>Order total:</div>
-                    <div class="payment-summary-money">$${orderTotal}</div>
-                  </div>
-        
-                  <button class="place-order-button button-primary">
-                    Place your order
-                  </button>
-          `;
-        
-          document.querySelector('.js-payment-summary')
-              .innerHTML= orderSummaryHTML;
-              
-            });
+          
 
       
          document.querySelectorAll('.js-delivery-option')
