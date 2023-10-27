@@ -1,6 +1,5 @@
 import { addToCart, calculateCartQuantity} from '../data/cart.js';
 import { products } from '../data/products.js';
-import { moneyFix } from './utils/money.js';
 
     let produdctsHTML = '';
 
@@ -25,7 +24,7 @@ import { moneyFix } from './utils/money.js';
           </div>
 
           <div class="product-price">
-            $${moneyFix(product.priceCents)}
+          ₹${product.priceCents}
           </div>
 
           <div class="product-quantity-container">
@@ -102,4 +101,4 @@ import { moneyFix } from './utils/money.js';
           addedMessageTimeOuts[productId] = timeOutId;
         });
       });
-    
+      

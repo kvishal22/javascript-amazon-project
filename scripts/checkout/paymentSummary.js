@@ -1,4 +1,4 @@
-import { cart } from "../../data/cart.js";
+import { calculateCartQuantity, cart } from "../../data/cart.js";
 import { getProducts } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOption.js";
 import { moneyFix } from "../utils/money.js";
@@ -32,28 +32,28 @@ export function renderPayment(){
   </div>
 
   <div class="payment-summary-row">
-    <div>Items (3):</div>
-    <div class="payment-summary-money">$${moneyFix(productPriceCents)}</div>
+    <div>Items (${calculateCartQuantity()}):</div>
+    <div class="payment-summary-money">₹${productPriceCents}</div>
   </div>
 
   <div class="payment-summary-row">
     <div>Shipping &amp; handling:</div>
-    <div class="payment-summary-money">$${moneyFix(shippingPriceCents)}</div>
+    <div class="payment-summary-money">₹${shippingPriceCents}</div>
   </div>
 
   <div class="payment-summary-row subtotal-row">
     <div>Total before tax:</div>
-    <div class="payment-summary-money">$${moneyFix(totalBeforeTax)}</div>
+    <div class="payment-summary-money">₹${totalBeforeTax}</div>
   </div>
 
   <div class="payment-summary-row">
     <div>Estimated tax (10%):</div>
-    <div class="payment-summary-money">$4.77</div>
+    <div class="payment-summary-money">₹${moneyFix(taxCents)}</div>
   </div>
 
   <div class="payment-summary-row total-row">
     <div>Order total:</div>
-    <div class="payment-summary-money">$${moneyFix(total)}</div>
+    <div class="payment-summary-money">₹${total}</div>
   </div>
 
   <button class="place-order-button button-primary">

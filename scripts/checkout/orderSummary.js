@@ -1,10 +1,10 @@
-import { cart, removeCartItem, calculateCartQuantity, updateQuantity, updateDeliveryOption } from "../../data/cart.js";
-import { products,getProducts } from "../../data/products.js";
+import { cart, removeCartItem, updateQuantity, updateDeliveryOption } from "../../data/cart.js";
+import { getProducts } from "../../data/products.js";
 import { moneyFix } from "../utils/money.js";
-import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { deliveryOptions,getDeliveryOption } from "../../data/deliveryOption.js";
+import { deliveryOptions,getDeliveryOption, calculateDeliveryDate } from "../../data/deliveryOption.js";
 import { renderPayment } from "./paymentSummary.js";
-
+import { renderCheckOutHeader } from "./checkOutHeaders.js";
+      
 export function render(){
 
 let totalSubtotal = 0;
@@ -27,13 +27,7 @@ let cartQuantity = 0;
 
       const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-
-      const today = dayjs();
-      const deliveryDate = today.add(
-        deliveryOption.deliveryDays,'days');
-      const dateString = deliveryDate.format(
-        'dddd, MMMM D'
-      );
+      const dateString =  calculateDeliveryDate(deliveryOption);
 
       cartSummaryHTML +=
     `
@@ -51,7 +45,7 @@ let cartQuantity = 0;
               ${matchingProduct.name}
             </div>
             <div class="product-price">
-              $${moneyFix(matchingProduct.priceCents)}
+            ₹${matchingProduct.priceCents}
             </div>
             <div class="product-quantity">
               <span>
@@ -87,15 +81,9 @@ let cartQuantity = 0;
         let HTML = '';
 
                   deliveryOptions.forEach((deliveryOption)=>{
-                    const today = dayjs();
-                    const deliveryDate = today.add(
-                      deliveryOption.deliveryDays,'days');
-                    const dateString = deliveryDate.format(
-                      'dddd, MMMM D'
-                    );
-
+                  const dateString =  calculateDeliveryDate(deliveryOption);
                     const priceString = deliveryOption.priceCents 
-                    ===0 ? 'FREE Shipping' : `$${moneyFix(deliveryOption.priceCents)} - Shipping`;
+                    ===0 ? 'FREE Shipping' : `₹${deliveryOption.priceCents} - Shipping`;
 
                     const isChecked = deliveryOption.id ===
                     cartItem.deliveryOptionId;
@@ -133,32 +121,15 @@ let cartQuantity = 0;
               link.addEventListener('click', ()=>{
               const {productId} = link.dataset;
             removeCartItem(productId);
-      const container =  document.querySelector(`.js-add-to-cart-${productId}`)
-      container.remove();
+      render();
       renderPayment();
+      renderCheckOutHeader();
 
       
             });
           });
 
-      
-
-      function updateCart(){
-        const cartQuantity = calculateCartQuantity();
-
-        if(cartQuantity === 1){
-          document.querySelector('.js-check-out-items')
-            .innerHTML = `${cartQuantity} item`;
-        }else if(cartQuantity === 0){
-          document.querySelector('.js-check-out-items')
-            .innerHTML = 'your cart is empty';
-        }
-        else{
-        document.querySelector('.js-check-out-items')
-            .innerHTML = `${cartQuantity} items`;
-        }
-      }
-      updateCart();
+    
 
       document.querySelectorAll('.js-update')
           .forEach((link)=>{
@@ -186,16 +157,18 @@ let cartQuantity = 0;
                 }
 
                 updateQuantity(productId,newQuantity);
-
-                const container = document.querySelector(`.js-add-to-cart-${productId}`);
-                container.classList.remove('is-editing-quantity');
-
-                const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
-
-                quantityLabel.innerHTML = newQuantity;
-
+                render();
                 renderPayment();
-                updateCart();
+                renderCheckOutHeader();
+
+                //const container = document.querySelector(`.js-add-to-cart-${productId}`);
+                //container.classList.remove('is-editing-quantity');
+
+                //const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
+
+                //quantityLabel.innerHTML = newQuantity;
+
+                
               });
           });
           
@@ -209,6 +182,7 @@ let cartQuantity = 0;
                     updateDeliveryOption(productId,deliveryOptionId);
                     render();
                     renderPayment();
+                    renderCheckOutHeader();
                   })
               });
             }

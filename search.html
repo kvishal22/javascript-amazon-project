@@ -1,0 +1,30 @@
+<html>
+  <body>
+<input type="text" id="searchInput" placeholder="Search...">
+<ul id="itemList">
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+  <li>Item 4</li>
+</ul>
+<script>
+const searchInput = document.getElementById('searchInput');
+const itemList = document.getElementById('itemList');
+const items = itemList.getElementsByTagName('li');
+
+searchInput.addEventListener('input', function() {
+  const searchTerm = searchInput.value.toLowerCase();
+
+  for (const element of items) {
+    const itemText = element.textContent.toLowerCase();
+
+    if (itemText.includes(searchTerm)) {
+      element.style.display = 'block';
+    } else {
+      element.style.display = 'none';
+    }
+  }
+});
+</script>
+</body>
+</html>
